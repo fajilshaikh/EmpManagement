@@ -1,0 +1,87 @@
+﻿@model List<EmpManagement.Models.Employee>;
+@{
+    var errorMsg = TempData["errorMessage"]?.ToString();
+    var successMsg = TempData["successMessage"]?.ToString();
+
+}
+@if (!string.IsNullOrWhiteSpace(errorMsg))
+{
+    <div class="alert alert-danger">
+        <b>Error :</b> @errorMsg
+        <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-lable="Close"></button>
+    </div>
+}
+else if (!string.IsNullOrWhiteSpace(successMsg))
+{
+    <div class="alert alert-success">
+        <b>Success :</b> @successMsg
+        <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-lable="Close"></button>
+    </div>
+}
+<form>
+    <button asp-controller="Home"  asp-action="CreateUpdate" class="btn btn-primary mb-3">
+        Add New Employee
+    </button>
+
+    <table class="table table-striped table-condensed" id="employeeTable">
+        <thead>
+            <tr>
+                <th>Sr.No</th>
+                <th>Code</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Address</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody class="table-hover">
+            @{
+                int i = 0;
+
+                @foreach (var item in Model)
+                {
+                   i = i + 1;
+                    <tr>
+                        <th>@i</th>
+                        <th>@item.EmployeeCode</th>
+                        <th>@item.FirstName</th>
+                        <th>@item.LastName</th>
+                        <th>@item.Address</th>
+                        <th>@item.Email</th>
+                        <th>
+                            @if (@item.MobileNo != null && @item.MobileNo.Count > 1)
+                            {
+                                 @string.Join(", ", item.MobileNo)
+                            }
+                        </th>
+                        <th>
+                            <div class="btn-group btn-group-sm">
+                                <a asp-controller="Home" asp-action="CreateUpdate" asp-route-id="@item.EmpID" class="btn btn-info">Edit</a>
+                                <a asp-controller="Home" asp-action="Delete" asp-route-id="@item.EmpID" class="btn btn-danger">Delete</a>
+                            </div>
+                        </th>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</form>
+
+<link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
+@section scripts{
+
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+
+    <script>
+        function activatejQueryTable() {
+            $("#employeeTable").DataTable();
+        }
+        $(function () {
+            activatejQueryTable();
+        });
+
+    </script>
+        }
